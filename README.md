@@ -14,6 +14,8 @@ In order to run these, download the .zip file of this repository, open it and th
 
 
 Test.txt is in the format: "%c %d" (%c means character, %d means integer)
+
+
 %c: 
 I for Insert
 S for Successor
