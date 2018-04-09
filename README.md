@@ -17,8 +17,8 @@ Test.txt is in the format: "%c %d" (%c means character, %d means integer)
 
 
 %c: 
-I for Insert\n
-S for Successor\n
-D for Delete\n
+I for Insert
+S for Successor
+D for Delete
 
 %d: any Integer
