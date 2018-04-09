@@ -14,6 +14,8 @@ public:
 	int u;
 	int min;
 	int max;
+	int countmin;
+	int countmax;
 	vector <eVEB*> cluster;
 	eVEB *summary;
 
@@ -28,8 +30,9 @@ public:
 	int Maximum(eVEB* Tree);
 	void Insert(eVEB* Tree, int val);
 	bool Search(eVEB* Tree, int val);
-	void Update(eVEB* Tree, int key);
-
+	void Update(eVEB* Tree,  int existingval, int newval);
+	int ExtractMin(eVEB* Tree);
+	bool isEmpty();
 };
 
 #endif

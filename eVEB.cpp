@@ -76,11 +76,19 @@ void eVEB::Insert(eVEB* Tree, int val){
 		EmptyTreeInsert(Tree, val);
 		//cout << "Break 1" << endl;
 	}
+	if (val == (*Tree).min){
+		(*Tree).countmin++;
+	}
+	if (val == (*Tree).max){
+		(*Tree).countmax++;
+	}
+
 	else{
 		if (val < (*Tree).min){ //swapping Minimum with Current value
 			int temp = val;
 			val = (*Tree).min;
 			(*Tree).min = temp;
+			(*Tree).countmin = 1;
 		}
 		//cout << "val after swap: " << val << endl;
 		if ((*Tree).u > 2){
@@ -112,6 +120,7 @@ void eVEB::Insert(eVEB* Tree, int val){
 		}
 		if (val > (*Tree).max){
 			(*Tree).max = val;
+			(*Tree).countmax = 1;
 		}
 	}
 
@@ -171,24 +180,34 @@ int eVEB::Successor(eVEB* Tree, int val){
 
 void eVEB::Dlt(eVEB* Tree, int val){
 	if (((*Tree).min == (*Tree).max) && ((*Tree).min == val)){
-		(*Tree).min = NIL;
-		(*Tree).max = NIL;
-		Tree = nullptr;
+		if ((*Tree).countmin ==1 && (*Tree).countmax ==1 ){
+			(*Tree).min = NIL;
+			(*Tree).max = NIL;
+			Tree = nullptr;
+		}
+		else
+		{
+			(*Tree).countmax--;
+			(*Tree).countmin--;
+		}
 	}
 	else if ((*Tree).u == 2){
 		if (val == 0){
 			(*Tree).min = 1;
+			(*Tree).countmin = (*Tree).countmax;
 		}
 		else{
 			(*Tree).min = 0;
 		}
 		(*Tree).max = (*Tree).min;
+		(*Tree).countmax = (*Tree).countmin;
 	}
 	else {
 		if ((*Tree).min == val){
 			int first_cluster = (*Tree).summary-> min;
 			val = index(first_cluster, (*Tree).cluster[first_cluster]->min, (*Tree).u);
 			(*Tree).min = val;
+
 		}
 		Dlt((*Tree).cluster[high(val,(*Tree).u)],low(val,(*Tree).u));
 		if ((*Tree).cluster[high(val,(*Tree).u)]->min == NIL){
@@ -229,6 +248,26 @@ bool eVEB::Search(eVEB* Tree, int val){
 		}
 	}
 	if (val == Successor(Tree,val-1)){
+		return true;
+	}
+	else return false;
+}
+
+
+
+int eVEB::ExtractMin(eVEB* Tree){
+	int val = min;
+	Dlt(Tree, min);
+	return val;
+}
+
+void eVEB::Update(eVEB* Tree, int existingval, int newval){
+	Dlt(Tree, existingval);
+	Insert(Tree, newval);
+}
+
+bool eVEB::isEmpty(void){
+	if (min == NIL && max == NIL){
 		return true;
 	}
 	else return false;
