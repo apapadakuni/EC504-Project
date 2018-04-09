@@ -27,20 +27,29 @@ int main(){
 			num = stoi(nums, nullptr, 10);
 
 			if (line[0]=='I'){
-				cout << num << endl;
 				(*tree).Insert(tree, num);
-
+				cout << "Inserted " << num << endl;
 			}
 
 			if (line[0] == 'S'){
 				int sucks;
 				sucks = (*tree).Successor(tree, num);
-				cout << "The successor of " << num << " is " << sucks << endl;
+				if (sucks == -3000){
+					cout << num << " does not have a successor"<<endl;
+				}
+				else
+					cout << "The successor of " << num << " is " << sucks << endl;
+			}
+			if (line[0]=='D'){
+				(*tree).Dlt(tree,num);
+				cout << "Deleted " << num << endl;
 			}
 
 		}
 		myfile.close();
 	}
+	cout << (*tree).Search(tree, 13) << endl;
+	cout << (*tree).Successor(tree, 154) << endl;
 
 	return 0;
 

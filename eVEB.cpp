@@ -19,6 +19,10 @@ int low(int x, int u){
 	return res;
 }
 
+int index(int high, int low,  int u){
+	return high*sqrt(u)+low;
+}
+
 
 
 eVEB::eVEB(int u2){ //CREATE-NEW-RS-VEB-TREE
@@ -40,8 +44,9 @@ eVEB::eVEB(int u2){ //CREATE-NEW-RS-VEB-TREE
 eVEB:: ~eVEB(){
 	if (summary != nullptr) delete summary;
 
-		for (int i=0; i< sqrt(u); i++)
-			if (cluster[i]) delete cluster[i];
+		for (int i=0; i< sqrt(u); i++){
+			if (cluster[i] != nullptr) delete cluster[i];
+		}
 	
 	//delete [] cluster;
 }
@@ -127,12 +132,12 @@ void eVEB::Insert(eVEB* Tree, int val){
 
 int eVEB::Successor(eVEB* Tree, int val){
 	if ((*Tree).u == 2){
-		if (val == 0 and (*Tree).max == 1){
+		if (val == 0 && (*Tree).max == 1){
 			return 1;
 		}
 		else return NIL;
 	}
-	else if ((*Tree).min != NIL and val <(*Tree).min){
+	else if ((*Tree).min != NIL && val <(*Tree).min){
 		return (*Tree).min;
 	}
 	else {
@@ -141,7 +146,7 @@ int eVEB::Successor(eVEB* Tree, int val){
 			(*Tree).cluster[high(val, (*Tree).u)] = new eVEB(sqrt((*Tree).u));
 		}
 		int max_low = ((*Tree).cluster[high(val, (*Tree).u)])->max;
-		if (max_low != NIL and low(val, (*Tree).u)){
+		if (max_low != NIL and low(val, (*Tree).u) < max_low){
 			return high(val, (*Tree).u)*sqrt((*Tree).u) + Successor((*Tree).cluster[high(val,(*Tree).u)],low(val,(*Tree).u));
 		}
 		else{
@@ -160,6 +165,74 @@ int eVEB::Successor(eVEB* Tree, int val){
 
 }
 
+
+
+
+
+void eVEB::Dlt(eVEB* Tree, int val){
+	if (((*Tree).min == (*Tree).max) && ((*Tree).min == val)){
+		(*Tree).min = NIL;
+		(*Tree).max = NIL;
+		Tree = nullptr;
+	}
+	else if ((*Tree).u == 2){
+		if (val == 0){
+			(*Tree).min = 1;
+		}
+		else{
+			(*Tree).min = 0;
+		}
+		(*Tree).max = (*Tree).min;
+	}
+	else {
+		if ((*Tree).min == val){
+			int first_cluster = (*Tree).summary-> min;
+			val = index(first_cluster, (*Tree).cluster[first_cluster]->min, (*Tree).u);
+			(*Tree).min = val;
+		}
+		Dlt((*Tree).cluster[high(val,(*Tree).u)],low(val,(*Tree).u));
+		if ((*Tree).cluster[high(val,(*Tree).u)]->min == NIL){
+			Dlt((*Tree).summary, high(val,(*Tree).u));
+			if (val == (*Tree).max){
+				int summary_max = (*Tree).summary->max;
+				if (summary_max == NIL){
+					(*Tree).max = (*Tree).min;
+				}
+				else{
+					(*Tree).max = index(summary_max, (*Tree).cluster[summary_max]->max, (*Tree).u);
+				}
+			}
+		}
+		else if (val == (*Tree).max){
+			(*Tree).max = index(high(val, (*Tree).u),(*Tree).cluster[high(val, (*Tree).u)]->max, (*Tree).u);
+		}
+	}
+}
+
+
+bool eVEB::Search(eVEB* Tree, int val){
+	// if ((*Tree).min== val || (*Tree).max == val){
+	// 	return true;
+	// }
+	// else {
+	// 	if ((*Tree).cluster[high(val, (*Tree).u)]== nullptr){
+	// 		return false;
+	// 	}
+	// 	else if (Search((*Tree).cluster[high(val, (*Tree).u)], low(val,(*Tree).u) == true)){
+	// 		return true;
+	// 	}
+	// 	return false;
+	// }
+	if (val ==0){
+		if ((*Tree).min == 0){
+			return true;
+		}
+	}
+	if (val == Successor(Tree,val-1)){
+		return true;
+	}
+	else return false;
+}
 
 
 
