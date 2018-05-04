@@ -16,23 +16,23 @@ public:
 	int max;
 	int countmin;
 	int countmax;
-	vector <eVEB*> cluster;
+	eVEB** cluster;
 	eVEB *summary;
 
 
 
 	eVEB(int u2);
 	~eVEB();
-	void EmptyTreeInsert(eVEB* Tree, int val);
+	void EmptyTreeInsert(eVEB* Tree, int val, int count);
 	int Successor(eVEB* tree, int val);
-	void Dlt(eVEB* tree, int val);
+	eVEB* Dlt(eVEB* tree, int val);
 	int Minimum(eVEB* Tree);
 	int Maximum(eVEB* Tree);
-	void Insert(eVEB* Tree, int val);
-	bool Search(eVEB* Tree, int val);
+	void Insert(eVEB* Tree, int val, int count);
+	int Search(eVEB* Tree, int val);
 	void Update(eVEB* Tree,  int existingval, int newval);
 	int ExtractMin(eVEB* Tree);
-	bool isEmpty();
+	bool isEmpty(void);
 };
 
 #endif
